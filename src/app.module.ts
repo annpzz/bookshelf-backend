@@ -15,14 +15,18 @@ import { Book } from './books/book.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const ssl = configService.get<string>('DB_SSL') === 'true';
+        const ssl = configService.get<string>('DB_SSL', 'true') === 'true'; // Default true for cloud
+        const dbUrl = configService.get<string>('DATABASE_URL');
+        
         return {
-          type: 'mysql' as const,
-          host: configService.get<string>('DB_HOST', 'localhost'),
-          port: configService.get<number>('DB_PORT', 3306),
-          username: configService.get<string>('DB_USERNAME', 'root'),
-          password: configService.get<string>('DB_PASSWORD', ''),
-          database: configService.get<string>('DB_NAME', 'bookproject'),
+          type: 'postgres' as const,
+          ...(dbUrl ? { url: dbUrl } : {
+            host: configService.get<string>('DB_HOST', 'localhost'),
+            port: configService.get<number>('DB_PORT', 5432),
+            username: configService.get<string>('DB_USERNAME', 'postgres'),
+            password: configService.get<string>('DB_PASSWORD', ''),
+            database: configService.get<string>('DB_NAME', 'bookproject'),
+          }),
           entities: [Book],
           synchronize: true,
           logging: false,

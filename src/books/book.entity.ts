@@ -40,7 +40,7 @@ export class Book {
   @Column({ type: 'enum', enum: ['want', 'reading', 'read'], default: 'want' })
   status: BookStatus;
 
-  @Column({ type: 'tinyint', nullable: true })
+  @Column({ type: 'int', nullable: true })
   rating: number;
 
   @Column({ type: 'text', nullable: true })
