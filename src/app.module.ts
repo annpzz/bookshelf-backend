@@ -15,7 +15,7 @@ import { Book } from './books/book.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        const ssl = configService.get<string>('DB_SSL', 'true') === 'true'; // Default true for cloud
+        const ssl = configService.get<string>('DB_SSL', 'false') === 'true'; // Default false for internal render DB
         const dbUrl = configService.get<string>('DATABASE_URL');
         
         return {
